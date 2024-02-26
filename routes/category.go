@@ -9,6 +9,14 @@ import (
 	"github.com/google/uuid"
 )
 
+type CreateCategoryInput struct {
+	Name string `form:"name" binding:"required"`
+}
+
+type UpdateCategoryInput struct {
+	Name string `form:"name"`
+}
+
 func GetCategories(c *gin.Context) {
 
 	var categories []models.Category
@@ -45,10 +53,6 @@ func GetCategoryByID(c *gin.Context) {
 
 func CreateCategory(c *gin.Context) {
 
-	type CreateCategoryInput struct {
-		Name string `form:"name" binding:"required"`
-	}
-
 	var input CreateCategoryInput
 
 	err := c.ShouldBind(&input)
@@ -74,10 +78,6 @@ func CreateCategory(c *gin.Context) {
 }
 
 func UpdateCategory(c *gin.Context) {
-
-	type UpdateCategoryInput struct {
-		Name string `form:"name"`
-	}
 
 	var input UpdateCategoryInput
 

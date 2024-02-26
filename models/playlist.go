@@ -13,6 +13,8 @@ type Playlist struct {
 	Description string     `json:"description"`
 	ImageUrl    string     `json:"image_url"`
 	Podcasts    []*Podcast `gorm:"many2many:playlist_podcasts;"`
+	Creator     User
+	CreatorID   uuid.UUID
 	CreatedAt   *time.Time `json:"created_at"`
 	UpdatedAt   *time.Time `json:"updated_at"`
 	DeletedAt   *time.Time `json:"deleted_at"`

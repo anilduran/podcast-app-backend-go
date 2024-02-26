@@ -14,8 +14,9 @@ type User struct {
 	Password            string
 	ProfilePhotoUrl     string               `json:"profile_photo_url"`
 	PodcastLists        []PodcastList        `gorm:"foreignKey:CreatorID;"`
+	Playlists           []Playlist           `gorm:"foreignKey:CreatorID;"`
 	PodcastListComments []PodcastListComment `gorm:"foreignKey:UserID;"`
-	PodcastComment      []PodcastComment     `gorm:"foreignKey:UserID;"`
+	PodcastComments     []PodcastComment     `gorm:"foreignKey:UserID;"`
 	CreatedAt           *time.Time           `json:"created_at"`
 	UpdatedAt           *time.Time           `json:"updated_at"`
 	DeletedAt           *time.Time           `json:"deleted_at"`

@@ -156,16 +156,95 @@ func DeletePlaylist(c *gin.Context) {
 
 func GetPlaylistPodcasts(c *gin.Context) {
 
+	id, _ := uuid.Parse(c.Param("id"))
+
+	var playlist models.Playlist
+
+	err := db.DB.First(&playlist, id).Error
+
+	if err != nil {
+		c.Status(http.StatusBadRequest)
+		return
+	}
+
+	var podcasts []models.Podcast
+
+	err = db.DB.Model(&playlist).Association("Podcasts").Find(&podcasts)
+
+	if err != nil {
+		c.Status(http.StatusInternalServerError)
+		return
+	}
+
+	c.JSON(http.StatusOK, podcasts)
+
 }
 
 func AddPodcastToPlaylist(c *gin.Context) {
+
+	id, _ := uuid.Parse(c.Param("id"))
+
+	var playlist models.Playlist
+
+	err := db.DB.First(&playlist, id).Error
+
+	if err != nil {
+		c.Status(http.StatusBadRequest)
+		return
+	}
+
+	podcastId, _ := uuid.Parse(c.Param("podcastId"))
+
+	var podcast models.Podcast
+
+	err = db.DB.First(&podcast, podcastId).Error
+
+	if err != nil {
+		c.Status(http.StatusBadRequest)
+		return
+	}
+
+	err = db.DB.Model(&playlist).Association("Podcasts").Append(&podcast)
+
+	if err != nil {
+		c.Status(http.StatusInternalServerError)
+		return
+	}
+
+	c.JSON(http.StatusCreated, podcast)
 
 }
 
 func RemovePodcastFromPlaylist(c *gin.Context) {
 
-}
+	id, _ := uuid.Parse(c.Param("id"))
 
-func GetPodcastsByPlaylistID(c *gin.Context) {
+	var playlist models.Playlist
 
+	err := db.DB.First(&playlist, id).Error
+
+	if err != nil {
+		c.Status(http.StatusBadRequest)
+		return
+	}
+
+	podcastId, _ := uuid.Parse(c.Param("podcastId"))
+
+	var podcast models.Podcast
+
+	err = db.DB.First(&podcast, podcastId).Error
+
+	if err != nil {
+		c.Status(http.StatusBadRequest)
+		return
+	}
+
+	err = db.DB.Model(&playlist).Association("Podcasts").Delete(&podcast)
+
+	if err != nil {
+		c.Status(http.StatusInternalServerError)
+		return
+	}
+
+	c.JSON(http.StatusOK, podcast)
 }

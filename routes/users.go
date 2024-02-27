@@ -50,7 +50,7 @@ func GetUserByID(c *gin.Context) {
 	result := db.DB.First(&user, id)
 
 	if result.Error != nil {
-		c.Status(http.StatusInternalServerError)
+		c.Status(http.StatusBadRequest)
 		return
 	}
 
@@ -116,14 +116,14 @@ func UpdateUser(c *gin.Context) {
 	result := db.DB.Where("username = ? OR email = ? AND id = ?", input.Username, input.Email, id).First(&user)
 
 	if result.Error == nil {
-		c.Status(http.StatusInternalServerError)
+		c.Status(http.StatusBadRequest)
 		return
 	}
 
 	result = db.DB.First(&user, id)
 
 	if result.Error != nil {
-		c.Status(http.StatusInternalServerError)
+		c.Status(http.StatusBadRequest)
 		return
 	}
 
@@ -163,7 +163,7 @@ func DeleteUser(c *gin.Context) {
 	result := db.DB.First(&user, id)
 
 	if result.Error != nil {
-		c.Status(http.StatusInternalServerError)
+		c.Status(http.StatusBadRequest)
 		return
 	}
 

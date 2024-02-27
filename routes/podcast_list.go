@@ -272,16 +272,115 @@ func DeletePodcastListComment(c *gin.Context) {
 
 func FollowPodcastList(c *gin.Context) {
 
+	userId, _ := uuid.Parse(c.GetString("userId"))
+
+	var user models.User
+
+	err := db.DB.First(&user, userId).Error
+
+	if err != nil {
+		c.Status(http.StatusInternalServerError)
+		return
+	}
+
+	id, _ := uuid.Parse(c.Param("id"))
+
+	var podcastList models.PodcastList
+
+	err = db.DB.First(&podcastList, id).Error
+
+	if err != nil {
+		c.Status(http.StatusInternalServerError)
+		return
+	}
+
+	err = db.DB.Model(&user).Association("FollowingPodcastLists").Append(&podcastList)
+
+	if err != nil {
+		c.Status(http.StatusInternalServerError)
+		return
+	}
+
+	c.JSON(http.StatusCreated, podcastList)
+
 }
 
 func UnfollowPodcastList(c *gin.Context) {
+
+	userId, _ := uuid.Parse(c.GetString("userId"))
+
+	var user models.User
+
+	err := db.DB.First(&user, userId).Error
+
+	if err != nil {
+		c.Status(http.StatusInternalServerError)
+		return
+	}
+
+	id, _ := uuid.Parse(c.Param("id"))
+
+	var podcastList models.PodcastList
+
+	err = db.DB.First(&podcastList, id).Error
+
+	if err != nil {
+		c.Status(http.StatusInternalServerError)
+		return
+	}
+
+	err = db.DB.Model(&user).Association("FollowingPodcastLists").Delete(&podcastList)
+
+	if err != nil {
+		c.Status(http.StatusInternalServerError)
+		return
+	}
+
+	c.JSON(http.StatusOK, podcastList)
 
 }
 
 func GetPodcastsByPodcastListID(c *gin.Context) {
 
+	var podcasts []models.Podcast
+
+	id, _ := uuid.Parse(c.Param("id"))
+
+	err := db.DB.Where("podcast_list_id = ?", id).Find(&podcasts).Error
+
+	if err != nil {
+		c.Status(http.StatusInternalServerError)
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"data": podcasts,
+	})
+
 }
 
 func GetCreatorByPodcastListID(c *gin.Context) {
+
+	var podcastList models.PodcastList
+
+	id, _ := uuid.Parse(c.Param("id"))
+
+	err := db.DB.First(&podcastList, id).Error
+
+	if err != nil {
+		c.Status(http.StatusInternalServerError)
+		return
+	}
+
+	var user models.User
+
+	err = db.DB.Select("username", "profile_photo_url").First(&user, podcastList.CreatorID).Error
+
+	if err != nil {
+		c.Status(http.StatusInternalServerError)
+		return
+	}
+
+	c.JSON(http.StatusOK, user)
 
 }

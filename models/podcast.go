@@ -16,6 +16,7 @@ type Podcast struct {
 	Playlists     []*Playlist `gorm:"many2many:playlist_podcasts;"`
 	PodcastListID uuid.UUID
 	PodcastList   PodcastList `gorm:"foreignKey:PodcastListID;"`
+	LikedByUsers  []*User     `gorm:"many2many:podcast_likes;"`
 	IsVisible     bool        `json:"is_visible" gorm:"default:true"`
 	CreatedAt     *time.Time  `json:"created_at"`
 	UpdatedAt     *time.Time  `json:"updated_at"`

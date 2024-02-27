@@ -285,8 +285,69 @@ func DeletePodcastComment(c *gin.Context) {
 
 func LikePodcast(c *gin.Context) {
 
+	userId, _ := uuid.Parse(c.GetString("userId"))
+
+	var user models.User
+
+	err := db.DB.First(&user, userId).Error
+
+	if err != nil {
+		c.Status(http.StatusBadRequest)
+		return
+	}
+
+	id, _ := uuid.Parse(c.Param("id"))
+
+	var podcast models.Podcast
+
+	err = db.DB.First(&podcast, id).Error
+
+	if err != nil {
+		c.Status(http.StatusBadRequest)
+		return
+	}
+
+	err = db.DB.Model(&user).Association("Podcasts").Append(&podcast)
+
+	if err != nil {
+		c.Status(http.StatusInternalServerError)
+		return
+	}
+
+	c.JSON(http.StatusCreated, podcast)
 }
 
 func UnlikePodcast(c *gin.Context) {
+
+	userId, _ := uuid.Parse(c.GetString("userId"))
+
+	var user models.User
+
+	err := db.DB.First(&user, userId).Error
+
+	if err != nil {
+		c.Status(http.StatusBadRequest)
+		return
+	}
+
+	id, _ := uuid.Parse(c.Param("id"))
+
+	var podcast models.Podcast
+
+	err = db.DB.First(&podcast, id).Error
+
+	if err != nil {
+		c.Status(http.StatusBadRequest)
+		return
+	}
+
+	err = db.DB.Model(&user).Association("Podcasts").Delete(&podcast)
+
+	if err != nil {
+		c.Status(http.StatusInternalServerError)
+		return
+	}
+
+	c.JSON(http.StatusOK, podcast)
 
 }

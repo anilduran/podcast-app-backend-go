@@ -61,7 +61,6 @@ func SetupRoutes(r *gin.Engine) {
 	playlists.POST("/", CreatePlaylist)
 	playlists.PUT("/:id", UpdatePlaylist)
 	playlists.DELETE("/:id", DeletePlaylist)
-	playlists.GET("/:id/podcasts", GetPodcastsByPlaylistID)
 	playlists.GET("/:id/podcasts", GetPlaylistPodcasts)
 	playlists.POST("/:id/podcasts/:podcastId", AddPodcastToPlaylist)
 	playlists.DELETE("/:id/podcasts/:podcastId", RemovePodcastFromPlaylist)

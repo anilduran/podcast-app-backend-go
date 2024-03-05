@@ -220,8 +220,36 @@ func GetMyPodcastComments(c *gin.Context) {
 
 func GetPresignedURLForImage(c *gin.Context) {
 
+	id, _ := uuid.Parse(c.GetString("userId"))
+
+	url, key, err := utils.PresignerInstace.PutObject(id.String(), "images")
+
+	if err != nil {
+		c.Status(http.StatusInternalServerError)
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"url": url,
+		"key": key,
+	})
+
 }
 
 func GetPresignedURLForPodcast(c *gin.Context) {
+
+	id, _ := uuid.Parse(c.GetString("userId"))
+
+	url, key, err := utils.PresignerInstace.PutObject(id.String(), "podcasts")
+
+	if err != nil {
+		c.Status(http.StatusInternalServerError)
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"url": url,
+		"key": key,
+	})
 
 }

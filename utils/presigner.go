@@ -22,11 +22,11 @@ func InitializePresigner(s3Client *s3.Client) {
 	}
 }
 
-func (presigner Presigner) PutObject(userId string) (string, string, error) {
+func (presigner Presigner) PutObject(userId, folder string) (string, string, error) {
 
 	id := uuid.New()
 
-	key := "images/" + userId + "/" + id.String() + ".jpg"
+	key := folder + "/" + userId + "/" + id.String() + ".jpg"
 
 	request, err := presigner.PresignClient.PresignPutObject(context.TODO(), &s3.PutObjectInput{
 		Bucket: aws.String(os.Getenv("S3_BUCKET")),

@@ -8,17 +8,17 @@ import (
 )
 
 type User struct {
-	ID                    uuid.UUID `gorm:"type:uuid;primary_key;"`
-	Username              string    `json:"username"`
-	Email                 string    `json:"email"`
-	Password              string
+	ID                    uuid.UUID            `gorm:"type:uuid;primary_key;" json:"id"`
+	Username              string               `json:"username"`
+	Email                 string               `json:"email"`
+	Password              string               `json:"password"`
 	ProfilePhotoUrl       string               `json:"profile_photo_url"`
-	PodcastLists          []PodcastList        `gorm:"foreignKey:CreatorID;"`
-	Playlists             []Playlist           `gorm:"foreignKey:CreatorID;"`
-	PodcastListComments   []PodcastListComment `gorm:"foreignKey:UserID;"`
-	PodcastComments       []PodcastComment     `gorm:"foreignKey:UserID;"`
-	LikedPodcasts         []*Podcast           `gorm:"many2many:podcast_likes;"`
-	FollowingPodcastLists []*PodcastList       `gorm:"many2many:following_podcast_lists;"`
+	PodcastLists          []PodcastList        `gorm:"foreignKey:CreatorID;" json:"podcast_lists"`
+	Playlists             []Playlist           `gorm:"foreignKey:CreatorID;" json:"playlists"`
+	PodcastListComments   []PodcastListComment `gorm:"foreignKey:UserID;" json:"podcast_list_comments"`
+	PodcastComments       []PodcastComment     `gorm:"foreignKey:UserID;" json:"podcast_comments"`
+	LikedPodcasts         []*Podcast           `gorm:"many2many:podcast_likes;" json:"liked_podcasts"`
+	FollowingPodcastLists []*PodcastList       `gorm:"many2many:following_podcast_lists;" json:"following_podcast_lists"`
 	CreatedAt             *time.Time           `json:"created_at"`
 	UpdatedAt             *time.Time           `json:"updated_at"`
 	DeletedAt             *time.Time           `json:"deleted_at"`

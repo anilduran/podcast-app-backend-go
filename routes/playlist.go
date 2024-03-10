@@ -10,15 +10,15 @@ import (
 )
 
 type CreatePlaylistInput struct {
-	Name        string `form:"name" binding:"required"`
-	Description string `form:"description" binding:"required"`
-	ImageUrl    string `form:"image_url" binding:"required"`
+	Name        string `json:"name" binding:"required"`
+	Description string `json:"description" binding:"required"`
+	ImageUrl    string `json:"image_url" binding:"required"`
 }
 
 type UpdatePlaylistInput struct {
-	Name        string `form:"name"`
-	Description string `form:"description"`
-	ImageUrl    string `form:"image_url"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	ImageUrl    string `json:"image_url"`
 }
 
 func GetPlaylists(c *gin.Context) {
@@ -59,7 +59,7 @@ func CreatePlaylist(c *gin.Context) {
 
 	var input CreatePlaylistInput
 
-	err := c.ShouldBind(&input)
+	err := c.ShouldBindJSON(&input)
 
 	if err != nil {
 		c.Status(http.StatusBadRequest)
@@ -89,7 +89,7 @@ func UpdatePlaylist(c *gin.Context) {
 
 	var input UpdatePlaylistInput
 
-	err := c.ShouldBind(&input)
+	err := c.ShouldBindJSON(&input)
 
 	if err != nil {
 		c.Status(http.StatusBadRequest)

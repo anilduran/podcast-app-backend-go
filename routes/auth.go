@@ -10,21 +10,21 @@ import (
 )
 
 type SignUpInput struct {
-	Username string `form:"username" binding:"required"`
-	Email    string `form:"email" binding:"required"`
-	Password string `form:"password" binding:"required"`
+	Username string `json:"username" binding:"required"`
+	Email    string `json:"email" binding:"required"`
+	Password string `json:"password" binding:"required"`
 }
 
 type SignInInput struct {
-	Email    string `form:"email" binding:"required"`
-	Password string `form:"password" binding:"required"`
+	Email    string `json:"email" binding:"required"`
+	Password string `json:"password" binding:"required"`
 }
 
 func SignUp(c *gin.Context) {
 
 	var input SignUpInput
 
-	err := c.ShouldBind(&input)
+	err := c.ShouldBindJSON(&input)
 
 	if err != nil {
 		c.Status(http.StatusBadRequest)
@@ -33,11 +33,11 @@ func SignUp(c *gin.Context) {
 
 	var user models.User
 
-	result := db.DB.Where("username = ? OR email = ?", input.Username, input.Email).Find(&user)
+	result := db.DB.Where("username = ? OR email = ?", input.Username, input.Email).First(&user)
 
 	if result.Error == nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"message": "User already exits",
+			"message": "User already exists",
 		})
 		return
 	}
@@ -71,7 +71,7 @@ func SignIn(c *gin.Context) {
 
 	var input SignInInput
 
-	err := c.ShouldBind(&input)
+	err := c.ShouldBindJSON(&input)
 
 	if err != nil {
 		c.Status(http.StatusBadRequest)
@@ -82,7 +82,7 @@ func SignIn(c *gin.Context) {
 
 	result := db.DB.Where("email = ?", input.Email).First(&user)
 
-	if result.Error == nil {
+	if result.Error != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"message": "Invalid credentials!",
 		})

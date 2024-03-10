@@ -11,10 +11,10 @@ import (
 )
 
 type UpdateMyCredentialsInput struct {
-	Username        string `form:"username"`
-	Email           string `form:"email"`
-	Password        string `form:"password"`
-	ProfilePhotoUrl string `form:"profile_photo_url"`
+	Username        string `json:"username"`
+	Email           string `json:"email"`
+	Password        string `json:"password"`
+	ProfilePhotoUrl string `json:"profile_photo_url"`
 }
 
 func GetMyCredentials(c *gin.Context) {
@@ -38,7 +38,7 @@ func UpdateMyCredentials(c *gin.Context) {
 
 	var input UpdateMyCredentialsInput
 
-	err := c.ShouldBind(&input)
+	err := c.ShouldBindJSON(&input)
 
 	if err != nil {
 		c.Status(http.StatusBadRequest)

@@ -8,9 +8,9 @@ import (
 )
 
 type Category struct {
-	ID           uuid.UUID      `gorm:"type:uuid;primary_key;"`
+	ID           uuid.UUID      `gorm:"type:uuid;primary_key;" json:"id"`
 	Name         string         `json:"name"`
-	PodcastLists []*PodcastList `gorm:"many2many:podcast_list_categories;"`
+	PodcastLists []*PodcastList `gorm:"many2many:podcast_list_categories;" json:"podcast_lists"`
 	CreatedAt    *time.Time     `json:"created_at"`
 	UpdatedAt    *time.Time     `json:"updated_at"`
 	DeletedAt    *time.Time     `json:"deleted_at"`

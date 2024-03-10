@@ -11,17 +11,17 @@ import (
 )
 
 type CreateUserInput struct {
-	Username        string `form:"username" binding:"required"`
-	Email           string `form:"email" binding:"required"`
-	Password        string `form:"password" binding:"required"`
-	ProfilePhotoUrl string `form:"profile_photo_url"`
+	Username        string `json:"username" binding:"required"`
+	Email           string `json:"email" binding:"required"`
+	Password        string `json:"password" binding:"required"`
+	ProfilePhotoUrl string `json:"profile_photo_url"`
 }
 
 type UpdateUserInput struct {
-	Username        string `form:"username"`
-	Email           string `form:"email"`
-	Password        string `form:"password"`
-	ProfilePhotoUrl string `form:"profile_photo_url"`
+	Username        string `json:"username"`
+	Email           string `json:"email"`
+	Password        string `json:"password"`
+	ProfilePhotoUrl string `json:"profile_photo_url"`
 }
 
 func GetUsers(c *gin.Context) {
@@ -62,7 +62,7 @@ func CreateUser(c *gin.Context) {
 
 	var input CreateUserInput
 
-	err := c.ShouldBind(&input)
+	err := c.ShouldBindJSON(&input)
 
 	if err != nil {
 		c.Status(http.StatusBadRequest)
@@ -102,7 +102,7 @@ func UpdateUser(c *gin.Context) {
 
 	var input UpdateUserInput
 
-	err := c.ShouldBind(&input)
+	err := c.ShouldBindJSON(&input)
 
 	if err != nil {
 		c.Status(http.StatusBadGateway)
@@ -175,5 +175,24 @@ func DeleteUser(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, user)
+
+}
+
+func GetPodcastListsByUserID(c *gin.Context) {
+
+	userId, _ := uuid.Parse(c.Param("id"))
+
+	var podcastLists []models.PodcastList
+
+	err := db.DB.Where("creator_id = ?", userId).Find(&podcastLists).Error
+
+	if err != nil {
+		c.Status(http.StatusInternalServerError)
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"data": podcastLists,
+	})
 
 }

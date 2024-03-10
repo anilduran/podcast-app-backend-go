@@ -10,11 +10,11 @@ import (
 )
 
 type CreateCategoryInput struct {
-	Name string `form:"name" binding:"required"`
+	Name string `json:"name" binding:"required"`
 }
 
 type UpdateCategoryInput struct {
-	Name string `form:"name"`
+	Name string `json:"name"`
 }
 
 func GetCategories(c *gin.Context) {
@@ -55,7 +55,7 @@ func CreateCategory(c *gin.Context) {
 
 	var input CreateCategoryInput
 
-	err := c.ShouldBind(&input)
+	err := c.ShouldBindJSON(&input)
 
 	if err != nil {
 		c.Status(http.StatusBadRequest)
@@ -81,7 +81,7 @@ func UpdateCategory(c *gin.Context) {
 
 	var input UpdateCategoryInput
 
-	err := c.ShouldBind(&input)
+	err := c.ShouldBindJSON(&input)
 
 	if err != nil {
 		c.Status(http.StatusBadRequest)

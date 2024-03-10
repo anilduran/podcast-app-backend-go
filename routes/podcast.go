@@ -10,28 +10,28 @@ import (
 )
 
 type CreatePodcastInput struct {
-	Name          string    `form:"name" binding:"required"`
-	Description   string    `form:"description" binding:"required"`
-	ImageUrl      string    `form:"image_url" binding:"required"`
-	PodcastUrl    string    `form:"podcast_url" binding:"required"`
-	PodcastListID uuid.UUID `form:"podcast_list_id" binding:"required"`
-	IsVisible     bool      `form:"is_visible" binding:"required"`
+	Name          string    `json:"name" binding:"required"`
+	Description   string    `json:"description" binding:"required"`
+	ImageUrl      string    `json:"image_url" binding:"required"`
+	PodcastUrl    string    `json:"podcast_url" binding:"required"`
+	PodcastListID uuid.UUID `json:"podcast_list_id" binding:"required"`
+	IsVisible     bool      `json:"is_visible" binding:"required"`
 }
 
 type UpdatePodcastInput struct {
-	Name        string `form:"name"`
-	Description string `form:"description"`
-	ImageUrl    string `form:"image_url"`
-	PodcastUrl  string `form:"podcast_url"`
-	IsVisible   bool   `form:"is_visible"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	ImageUrl    string `json:"image_url"`
+	PodcastUrl  string `json:"podcast_url"`
+	IsVisible   bool   `json:"is_visible"`
 }
 
 type CreatePodcastCommentInput struct {
-	Content string `form:"content" binding:"required"`
+	Content string `json:"content" binding:"required"`
 }
 
 type UpdatePodcastCommentInput struct {
-	Content string `form:"content"`
+	Content string `json:"content"`
 }
 
 func GetPodcasts(c *gin.Context) {
@@ -70,7 +70,7 @@ func CreatePodcast(c *gin.Context) {
 
 	var input CreatePodcastInput
 
-	err := c.ShouldBind(&input)
+	err := c.ShouldBindJSON(&input)
 
 	if err != nil {
 		c.Status(http.StatusBadRequest)
@@ -101,7 +101,7 @@ func UpdatePodcast(c *gin.Context) {
 
 	var input models.Podcast
 
-	err := c.ShouldBind(&input)
+	err := c.ShouldBindJSON(&input)
 
 	if err != nil {
 		c.Status(http.StatusBadRequest)
@@ -197,7 +197,7 @@ func CreatePodcastComment(c *gin.Context) {
 
 	var input CreatePodcastCommentInput
 
-	err := c.ShouldBind(&input)
+	err := c.ShouldBindJSON(&input)
 
 	if err != nil {
 		c.Status(http.StatusBadRequest)
@@ -228,7 +228,7 @@ func UpdatePodcastComment(c *gin.Context) {
 
 	var input UpdatePodcastCommentInput
 
-	err := c.ShouldBind(&input)
+	err := c.ShouldBindJSON(&input)
 
 	if err != nil {
 		c.Status(http.StatusBadRequest)

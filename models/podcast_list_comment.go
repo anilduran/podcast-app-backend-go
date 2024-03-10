@@ -8,7 +8,7 @@ import (
 )
 
 type PodcastListComment struct {
-	ID            uuid.UUID  `gorm:"type:uuid;primary_key;"`
+	ID            uuid.UUID  `gorm:"type:uuid;primary_key;" json:"id"`
 	Content       string     `json:"content"`
 	UserID        uuid.UUID  `json:"user_id"`
 	PodcastListID uuid.UUID  `json:"podcast_list_id"`

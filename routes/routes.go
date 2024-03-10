@@ -1,6 +1,9 @@
 package routes
 
-import "github.com/gin-gonic/gin"
+import (
+	"example.com/podcast-app-go/middlewares"
+	"github.com/gin-gonic/gin"
+)
 
 func SetupRoutes(r *gin.Engine) {
 
@@ -9,6 +12,7 @@ func SetupRoutes(r *gin.Engine) {
 	auth.POST("/sign-up", SignUp)
 
 	me := r.Group("/api/me")
+	me.Use(middlewares.Auth)
 	me.GET("/", GetMyCredentials)
 	me.PUT("/", UpdateMyCredentials)
 	me.GET("/podcast-lists", GetMyPodcastLists)
@@ -21,6 +25,7 @@ func SetupRoutes(r *gin.Engine) {
 	me.GET("/presigned-url/podcast", GetPresignedURLForPodcast)
 
 	categories := r.Group("/api/categories")
+	categories.Use(middlewares.Auth)
 	categories.GET("/", GetCategories)
 	categories.GET("/:id", GetCategoryByID)
 	categories.POST("/", CreateCategory)
@@ -29,20 +34,23 @@ func SetupRoutes(r *gin.Engine) {
 	categories.GET("/:id/podcast-lists", GetPodcastListsByCategoryID)
 
 	podcastLists := r.Group("/api/podcast-lists")
+	podcastLists.Use(middlewares.Auth)
 	podcastLists.GET("/", GetPodcastLists)
 	podcastLists.GET("/:id", GetPodcastListByID)
 	podcastLists.POST("/", CreatePodcastList)
 	podcastLists.PUT("/:id", UpdatePodcastList)
 	podcastLists.DELETE("/:id", DeletePodcastList)
-	podcastLists.GET("/:id/podcasts")
+	podcastLists.GET("/:id/podcasts", GetPodcastsByPodcastListID)
 	podcastLists.GET("/:id/comments", GetPodcastListComments)
 	podcastLists.POST("/:id/comments", CreatePodcastListComment)
 	podcastLists.PUT("/:id/comments/:commentId", UpdatePodcastListComment)
 	podcastLists.DELETE("/:id/comments/:commentID", DeletePodcastListComment)
 	podcastLists.POST("/:id/follow", FollowPodcastList)
 	podcastLists.DELETE("/:id/unfollow", UnfollowPodcastList)
+	podcastLists.GET("/search", SearchPodcastLists)
 
 	podcasts := r.Group("/api/podcasts")
+	podcasts.Use(middlewares.Auth)
 	podcasts.GET("/", GetPodcasts)
 	podcasts.GET("/:id", GetPodcastByID)
 	podcasts.POST("/", CreatePodcast)
@@ -52,10 +60,11 @@ func SetupRoutes(r *gin.Engine) {
 	podcasts.POST("/:id/comments", CreatePodcastComment)
 	podcasts.PUT("/:id/comments/:commentId", UpdatePodcastComment)
 	podcasts.DELETE("/:id/comments/:commentId", DeletePodcastComment)
-	podcastLists.POST("/:id/like", LikePodcast)
-	podcastLists.DELETE("/:id/unlike", UnlikePodcast)
+	podcasts.POST("/:id/like", LikePodcast)
+	podcasts.DELETE("/:id/unlike", UnlikePodcast)
 
 	playlists := r.Group("/api/playlists")
+	playlists.Use(middlewares.Auth)
 	playlists.GET("/", GetPlaylists)
 	playlists.GET("/:id", GetPlaylistByID)
 	playlists.POST("/", CreatePlaylist)
@@ -66,10 +75,12 @@ func SetupRoutes(r *gin.Engine) {
 	playlists.DELETE("/:id/podcasts/:podcastId", RemovePodcastFromPlaylist)
 
 	users := r.Group("/api/users")
+	users.Use(middlewares.Auth)
 	users.GET("/", GetUsers)
 	users.GET("/:id", GetUserByID)
 	users.POST("/", CreateUser)
 	users.PUT("/:id", UpdateUser)
 	users.DELETE("/:id", DeleteUser)
+	users.GET("/:id/podcast-lists", GetPodcastListsByUserID)
 
 }

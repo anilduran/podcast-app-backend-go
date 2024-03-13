@@ -307,7 +307,7 @@ func LikePodcast(c *gin.Context) {
 		return
 	}
 
-	err = db.DB.Model(&user).Association("Podcasts").Append(&podcast)
+	err = db.DB.Model(&user).Association("LikedPodcasts").Append(&podcast)
 
 	if err != nil {
 		c.Status(http.StatusInternalServerError)
@@ -341,7 +341,7 @@ func UnlikePodcast(c *gin.Context) {
 		return
 	}
 
-	err = db.DB.Model(&user).Association("Podcasts").Delete(&podcast)
+	err = db.DB.Model(&user).Association("LikedPodcasts").Delete(&podcast)
 
 	if err != nil {
 		c.Status(http.StatusInternalServerError)

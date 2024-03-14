@@ -387,4 +387,19 @@ func GetCreatorByPodcastListID(c *gin.Context) {
 
 func SearchPodcastLists(c *gin.Context) {
 
+	query := c.Query("query")
+
+	var podcastLists []models.PodcastList
+
+	err := db.DB.Where("name LIKE ?", "%"+query+"%").Find(podcastLists).Error
+
+	if err != nil {
+		c.Status(http.StatusInternalServerError)
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"data": podcastLists,
+	})
+
 }
